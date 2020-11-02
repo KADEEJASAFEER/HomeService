@@ -10,8 +10,13 @@ class skill(models.Model):
 
 
 class addSkill(models.Model):
-    skill=models.ForeignKey(skill,on_delete=models.CASCADE)
+    userskill=models.ForeignKey(skill,on_delete=models.CASCADE)
+    location = models.CharField(max_length=120)
     user=models.CharField(max_length=120)
+
+
+
+
 
 class addWork(models.Model):
     workname=models.ForeignKey(skill,on_delete=models.CASCADE)
@@ -26,5 +31,7 @@ class addWork(models.Model):
 
     workstatus=models.CharField(max_length=50,choices=choice)
 
-    def __str__(self):
-        return self.workname
+
+
+
+

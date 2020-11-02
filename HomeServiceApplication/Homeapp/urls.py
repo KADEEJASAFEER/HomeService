@@ -19,11 +19,13 @@ from .views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('register',RegistrationView.as_view(),name="register"),
-    path('loginpage',loginView.as_view(),name="loginpage"),
+    path('',loginView.as_view(),name="loginpage"),
+    path('logoutPage',logoutPage,name="logoutPage"),
     path('index',indexpage,name="index"),
     path('addskill',AddSkill.as_view(),name="addskill"),
     path('addwork',AddWork.as_view(),name="addwork"),
     path('editwork/<int:pk>',EditWork.as_view(),name="editwork"),
-    path('deletework/<int:pk>',DeleteWork.as_view(),name='deletework')
+    path('deletework/<int:pk>',DeleteWork.as_view(),name='deletework'),
+    path("userviewwork",UserViewWork.as_view(),name="userviewwork")
 
 ]

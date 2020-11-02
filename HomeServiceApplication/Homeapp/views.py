@@ -1,10 +1,12 @@
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from  django.contrib.auth.models import User
-from .forms import RegistrationForm,LoginForm,AddSkillForm,AddWorkForm
+from .forms import *
 from django.contrib.auth import authenticate,login,logout
 from django.views.generic import TemplateView,CreateView
 from .models import skill,addSkill,addWork
+from django.utils.decorators import method_decorator
 
 # Create your views here.
 
@@ -53,15 +55,18 @@ class loginView(TemplateView):
             print("login not success")
             return redirect("loginpage")
 
-
+def logoutPage(request):
+    logout(request)
+    return redirect("loginpage")
 
 def indexpage(request):
     return render(request,"Homeapp/index.html")
 
+@method_decorator(login_required,name='dispatch')
 class AddSkill(TemplateView):
     model=addSkill
     form_class=AddSkillForm
-    template_name = "Homeapp/add_skill.html"
+    template_name = "Homeapp/user_add_skill.html"
     context={}
     def get(self, request, *args, **kwargs):
         self.context["form"]=self.form_class(initial={'user':request.user})
@@ -79,6 +84,7 @@ class AddSkill(TemplateView):
             return render(request,self.template_name,self.context)
 
 
+@method_decorator(login_required,name='dispatch')
 class AddWork(TemplateView):
     model=addWork
     form_class= AddWorkForm
@@ -137,3 +143,20 @@ class DeleteWork(TemplateView):
         qs = self.model.objects.get(id=id)
         qs.delete()
         return redirect("addwork")
+
+
+
+class UserViewWork(TemplateView):
+    model=addSkill
+    model1=addWork
+    template_name = "Homeapp/user_view_work.html"
+    context={}
+
+    def getQuery(self,request):
+        return self.model.objects.filter(user=request.user)
+
+    def get(self, request, *args, **kwargs):
+        qs=self.getQuery(request)
+        print(qs)
+        
+        return render(request,self.template_name,self.context)

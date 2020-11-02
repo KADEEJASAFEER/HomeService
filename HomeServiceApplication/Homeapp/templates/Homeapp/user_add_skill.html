@@ -12,7 +12,7 @@
     <div class="row">
         <div class="col"></div>
         <div class="col-6">
-            <h1>ADD SKILL</h1>
+            <h1>USER ADD SKILL</h1>
             <form method="post">
                 {%csrf_token%}
                 {{form.as_p}}
@@ -22,7 +22,8 @@
 
             <hr>
             {% for skill in skills %}
-            {{skill.skill}}
+            {{skill.userskill}}
+            {{skill.location}}
             {% endfor%}
 
         </div>
