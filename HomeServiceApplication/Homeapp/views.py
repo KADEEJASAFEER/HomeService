@@ -5,7 +5,7 @@ from  django.contrib.auth.models import User
 from .forms import *
 from django.contrib.auth import authenticate,login,logout
 from django.views.generic import TemplateView,CreateView
-from .models import skill,addSkill,addWork
+from .models import skill,addSkill,addWork,WorkResponses
 from django.utils.decorators import method_decorator
 
 # Create your views here.
@@ -136,7 +136,7 @@ class DeleteWork(TemplateView):
     def get(self, request, *args, **kwargs):
         id=kwargs.get("pk")
         qs=self.model.objects.get(id=id)
-        self.context["form"]=AddWorkForm(instance=qs)
+        self.context["works"]=qs
         return render(request,self.template_name,self.context)
     def post(self, request, *args, **kwargs):
         id = kwargs.get("pk")
@@ -148,15 +148,79 @@ class DeleteWork(TemplateView):
 
 class UserViewWork(TemplateView):
     model=addSkill
-    model1=addWork
     template_name = "Homeapp/user_view_work.html"
     context={}
+    def get(self, request, *args, **kwargs):
+        qs1=addSkill.objects.get(user=request.user)
+        qs=addWork.objects.filter(workname=qs1.userskill,workstatus='notassigned').exclude(user=request.user)
+       # data=qs.objects.exclude(addWork.workname=qs1.userskill)
 
-    def getQuery(self,request):
-        return self.model.objects.filter(user=request.user)
+        for data in qs:
+            print(data.user)
+        self.context["works"]=qs
+
+
+        return render(request,self.template_name,self.context)
+
+
+class SendResponse(TemplateView):
+    model=WorkResponses
+    form_class=WorkResponseForm
+    template_name = "Homeapp/sendresponse.html"
+    context={}
+    def get(self,request,*args,**kwargs):
+        id=self.kwargs.get('pk')
+        self.context["form"]=self.form_class(initial={'workid':id,'user':request.user})
+
+        return render(request,self.template_name,self.context)
+
+    def post(self,request,*args,**kwargs):
+        form=WorkResponseForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('userviewwork')
+        else:
+            return render(request,self.template_name,self.context)
+
+
+class ViewResponse(TemplateView):
+    model=WorkResponses
+    template_name = "Homeapp/view_responses.html"
+    from_class=AddWorkForm
+    context={}
 
     def get(self, request, *args, **kwargs):
-        qs=self.getQuery(request)
+        workid = self.kwargs.get('pk')
+        qs=self.model.objects.get(workid=workid)
         print(qs)
-        
-        return render(request,self.template_name,self.context)
+        self.context["response"] = qs
+
+        qs1=addWork.objects.get(id=workid)
+        print("status",qs1)
+        workstatus=qs1.workstatus
+        print(workstatus)
+
+        form =WorkAssignForm(instance=qs1)
+        self.context["form"] = form
+
+        return render(request, self.template_name, self.context)
+
+    def post(self, request, *args, **kwargs):
+        workid = self.kwargs.get('pk')
+        qs =addWork.objects.get(id=workid)
+        form = WorkAssignForm(instance=qs, data=request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("addwork")
+        else:
+            return render(request, self.template_name, self.context)
+
+class CompletedWorks(TemplateView):
+    template_name = "Homeapp/completed_works.html"
+    context={}
+    def get(self, request, *args, **kwargs):
+
+        qs = addWork.objects.filter(user=request.user, workstatus='completed')
+        self.context["works"]=qs
+
+        return render(request, self.template_name, self.context)

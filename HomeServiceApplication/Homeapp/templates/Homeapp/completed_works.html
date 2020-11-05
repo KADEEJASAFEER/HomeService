@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+{% extends "Homeapp/index.html" %}
+{% block body_block %}
+
+<div class="col-6">
+
+    <h1>Completed Works</h1><br>
+    {% for work in works%}
+    Work:{{work.workname}}<br>
+    Estimated Amount:{{work.estimatedamount}}<br>
+<hr>
+    {% endfor%}
+</div>
+
+{% endblock %}

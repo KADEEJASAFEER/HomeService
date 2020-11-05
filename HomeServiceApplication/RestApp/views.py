@@ -97,7 +97,6 @@ class EditWork(APIView):
         return Response(serializer.data)
 
 
-
     def put(self,request,pk):
         work=self.get_object(pk)
         serializer=addWorkSerializer(work,data=request.data)

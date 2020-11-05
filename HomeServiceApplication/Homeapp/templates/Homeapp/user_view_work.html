@@ -1,15 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-{% for skill in skills %}
-            {{skill.skillname}}
-            {{skill.location}}
+{% extends "Homeapp/index.html" %}
+{% block body_block %}
+
+        <div class="col-12">
+            <h1 align="center"> View Work  </h1>
+            {% for work in works %}
+            <div class="card w-25">
+                <div class="card-body">
+                    <h5 class="card-title">{{work.workname}}</h5>
+                    <p class="card-text">Name of Customer:{{work.user}}</p>
+                    <p class="card-text">Work Location: {{work.location}}</p>
+                    <p class="card-text">Estimated Amount:{{work.estimatedamount}}</p>
+                    <a href="{% url 'sendresponse' work.id%}" class="btn btn-secondary">Send Response</a>
+                </div>
+            </div>
+
+            <br>
             {% endfor%}
-{{wrk}}
-<a href="">Send Response</a>
-</body>
-</html>
+
+        </div>
+        <div class="col"></div>
+    </div>
+</div>
+
+{% endblock %}

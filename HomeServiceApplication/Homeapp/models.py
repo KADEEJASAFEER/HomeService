@@ -14,7 +14,8 @@ class addSkill(models.Model):
     location = models.CharField(max_length=120)
     user=models.CharField(max_length=120)
 
-
+    def __str__(self):
+        return self.userskill.skillname
 
 
 
@@ -31,6 +32,17 @@ class addWork(models.Model):
 
     workstatus=models.CharField(max_length=50,choices=choice)
 
+    def __str__(self):
+        return self.workname.skillname
+
+class WorkResponses(models.Model):
+    NegotiablePrice=models.IntegerField()
+    ExpectedDays=models.IntegerField()
+    workid=models.ForeignKey(addWork,on_delete=models.CASCADE)
+    user=models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.user
 
 
 

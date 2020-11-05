@@ -2,7 +2,7 @@ from django import forms
 from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import skill,addSkill,addWork
+from .models import skill,addSkill,addWork,WorkResponses
 
 
 class RegistrationForm(UserCreationForm):
@@ -31,3 +31,17 @@ class AddWorkForm(ModelForm):
         }
 
 
+class WorkResponseForm(ModelForm):
+    class Meta:
+        model=WorkResponses
+        fields="__all__"
+        widgets={
+            'workid': forms.HiddenInput(),
+            'user':forms.HiddenInput()
+
+        }
+
+class WorkAssignForm(ModelForm):
+    class Meta:
+        model=addWork
+        fields=["workstatus"]

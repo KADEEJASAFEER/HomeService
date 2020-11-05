@@ -26,6 +26,10 @@ urlpatterns = [
     path('addwork',AddWork.as_view(),name="addwork"),
     path('editwork/<int:pk>',EditWork.as_view(),name="editwork"),
     path('deletework/<int:pk>',DeleteWork.as_view(),name='deletework'),
-    path("userviewwork",UserViewWork.as_view(),name="userviewwork")
+    path("userviewwork",UserViewWork.as_view(),name="userviewwork"),
+    path('sendresponse/<int:pk>',SendResponse.as_view(),name="sendresponse"),
+    path('viewresponse/<int:pk>',ViewResponse.as_view(),name="viewresponse"),
+    path('completedwork',CompletedWorks.as_view(),name="completedwork"),
+
 
 ]
